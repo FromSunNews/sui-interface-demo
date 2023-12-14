@@ -14,11 +14,12 @@ module sui_intf_demo_core::binary_operator {
     struct ApplyRequest {//<phantom T> {
         first: u64,
         second: u64,
+        
     }
 
     struct ApplyResponse<phantom T> {
         result: u64,
-        _appply_request: ApplyRequest,
+        _apply_request: ApplyRequest,
     }
 
     public fun new_apply_request(//<ImplW: drop>(
@@ -45,43 +46,43 @@ module sui_intf_demo_core::binary_operator {
     }
 
     // public(friend) fun drop_apply_request(//<ImplW>(
-    //     _appply_request: ApplyRequest, //<ImplW>,
+    //     _apply_request: ApplyRequest, //<ImplW>,
     // ) {
     //     let ApplyRequest {
     //         first: _,
     //         second: _,
-    //     } = _appply_request;
+    //     } = _apply_request;
     // }
 
     public(friend) fun unpack_apply_request(//<ImplW>(
-        _appply_request: ApplyRequest, //<ImplW>,
+        _apply_request: ApplyRequest, //<ImplW>,
     ): (u64, u64) {
         let ApplyRequest {
             first,
             second,
-        } = _appply_request;
+        } = _apply_request;
         (first, second)
     }
 
     public fun new_apply_response<ImplW: drop>(
         _impl_witness: ImplW,
         result: u64,
-        _appply_request: ApplyRequest,
+        _apply_request: ApplyRequest,
     ): ApplyResponse<ImplW> {
         ApplyResponse {
             result,
-            _appply_request,
+            _apply_request,
         }
     }
 
     public(friend) fun unpack_apply_respone<ImplW>(
-        _appply_response: ApplyResponse<ImplW>,
+        _apply_response: ApplyResponse<ImplW>,
     ): (u64, ApplyRequest) {
         let ApplyResponse {
             result,
-            _appply_request,
-        } = _appply_response;
-        (result, _appply_request)
+            _apply_request,
+        } = _apply_response;
+        (result, _apply_request)
     }
 
 }
