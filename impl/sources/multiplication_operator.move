@@ -9,6 +9,6 @@ module sui_intf_demo_impl::multiplication_operator {
         //let second = binary_operator::apply_request_second(&appply_request);
         let (first, second) = binary_operator::get_apply_request_all_parameters(&appply_request);
         //let w = MultiplicationOperator{};
-        binary_operator::new_apply_response(MultiplicationOperator{}, appply_request, first * second)
+        binary_operator::new_apply_response(MultiplicationOperator{}, first * second, appply_request)
     }
 }

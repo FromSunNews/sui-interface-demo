@@ -17,8 +17,8 @@ module sui_intf_demo_core::binary_operator {
     }
 
     struct ApplyResponse<phantom T> {
-        _appply_request: ApplyRequest,
         result: u64,
+        _appply_request: ApplyRequest,
     }
 
     public fun new_apply_request(//<ImplW: drop>(
@@ -55,23 +55,23 @@ module sui_intf_demo_core::binary_operator {
     
     public fun new_apply_response<ImplW: drop>(
         _impl_witness: ImplW,
-        _appply_request: ApplyRequest,
         result: u64,
+        _appply_request: ApplyRequest,
     ): ApplyResponse<ImplW> {
         ApplyResponse {
-            _appply_request,
             result,
+            _appply_request,
         }
     }
 
     public(friend) fun unpack_apply_respone<ImplW>(
         _appply_response: ApplyResponse<ImplW>,
-    ): (ApplyRequest, u64) {
+    ): (u64, ApplyRequest) {
         let ApplyResponse {
-            _appply_request,
             result,
+            _appply_request,
         } = _appply_response;
-        (_appply_request, result)
+        (result, _appply_request)
     }
 
 }
