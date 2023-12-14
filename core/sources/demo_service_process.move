@@ -1,12 +1,26 @@
 module sui_intf_demo_core::demo_service_process {
     use sui_intf_demo_core::binary_operator;
 
-    // public fun foo(x: u64, y: u64): u64 {
-    //     let (x_1, y_1) = foo_step_0(x, y);
-    //     let r_1 = binary_operator_1::apply(x_1, y_1);
-    //     let r_2 = binary_operator_2::apply(y_1, r_1);
-    //     foo_step_3(r_2)
-    // }
+    // --------------- Pseudo-code Start ---------------
+    /*
+    public interface binary_operator {
+        fun apply(first: u64, second: u64) : u64;
+    }
+
+    @inject
+    private op_1: binary_operator;
+
+    @inject
+    private op_2: binary_operator;
+
+    public fun foo(x: u64, y: u64): u64 {
+        let (x_1, y_1) = foo_step_0(x, y); //<- step_0
+        let r_1 = binary_operator_1::apply(x_1, y_1); //<- step_1
+        let r_2 = binary_operator_2::apply(y_1, r_1); //<- step_2
+        foo_step_3(r_2) //<- step_3
+    }
+    */
+    // --------------- Pseudo-code End --------------- 
 
     struct FooStep_1Context {
         x: u64,
