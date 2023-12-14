@@ -57,7 +57,8 @@ module sui_intf_demo_core::demo_service_process {
         FooStep_2Context
     ) {
         let (r_1, step_1_request) = binary_operator::unpack_apply_respone(step_1_response);
-        binary_operator::drop_apply_request(step_1_request);
+        //binary_operator::drop_apply_request(step_1_request);
+        let (_, _) = binary_operator::unpack_apply_request(step_1_request);
         let FooStep_1Context {
             x,
             y,
@@ -86,7 +87,8 @@ module sui_intf_demo_core::demo_service_process {
         step_2_context: FooStep_2Context,
     ): u64 {
         let (r_2, step_2_request) = binary_operator::unpack_apply_respone(step_2_response);
-        binary_operator::drop_apply_request(step_2_request);
+        //binary_operator::drop_apply_request(step_2_request);
+        (_, _) = binary_operator::unpack_apply_request(step_2_request);
         let FooStep_2Context {
             x,
             y,

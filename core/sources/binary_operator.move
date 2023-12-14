@@ -44,15 +44,25 @@ module sui_intf_demo_core::binary_operator {
         (request.first, request.second)
     }
 
-    public(friend) fun drop_apply_request(//<ImplW>(
+    // public(friend) fun drop_apply_request(//<ImplW>(
+    //     _appply_request: ApplyRequest, //<ImplW>,
+    // ) {
+    //     let ApplyRequest {
+    //         first: _,
+    //         second: _,
+    //     } = _appply_request;
+    // }
+
+    public(friend) fun unpack_apply_request(//<ImplW>(
         _appply_request: ApplyRequest, //<ImplW>,
-    ) {
+    ): (u64, u64) {
         let ApplyRequest {
-            first: _,
-            second: _,
+            first,
+            second,
         } = _appply_request;
+        (first, second)
     }
-    
+
     public fun new_apply_response<ImplW: drop>(
         _impl_witness: ImplW,
         result: u64,
