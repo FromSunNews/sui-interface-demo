@@ -1,11 +1,58 @@
 module sui_intf_demo_core::binary_operator {
-    use sui::tx_context::TxContext;
-
+    use std::type_name::{Self, TypeName};
+    use sui::tx_context::{Self, TxContext};
+    use sui::vec_set::{Self, VecSet};
+    use sui::object::{Self, ID, UID};
+    
     friend sui_intf_demo_core::demo_service_process;
+
+    const ENotAdmin: u64 = 100;
+    const ENotAllowedImpl: u64 = 101;
 
     struct BINARY_OPERATOR has drop {}
 
-    fun init(_witness: BINARY_OPERATOR, _ctx: &mut TxContext) {
+    struct BinaryOperatorConfig has key, store {
+        id: UID,
+        impl_allowlist: VecSet<TypeName>,
+    }
+
+    struct BinaryOperatorConfigCap has key, store {
+        id: UID,
+        for: ID
+    }
+
+    fun init(_witness: BINARY_OPERATOR, ctx: &mut TxContext) {
+        let config = BinaryOperatorConfig {
+            id: object::new(ctx),
+            impl_allowlist: vec_set::empty(),
+        };
+        let cap = BinaryOperatorConfigCap {
+            id: object::new(ctx),
+            for: object::id(&config),
+        };
+        sui::transfer::transfer(cap, tx_context::sender(ctx));
+        sui::transfer::share_object(config);
+    }
+
+    public fun add_allowed_impl<WT>(config: &mut BinaryOperatorConfig, cap: &BinaryOperatorConfigCap) {
+        assert!(has_access(config, cap), ENotAdmin);
+        let type_name = type_name::get<WT>();
+        if (!vec_set::contains(&config.impl_allowlist, &type_name)) {
+            vec_set::insert(&mut config.impl_allowlist, type_name);
+        };
+    }
+
+    public fun remove_allowed_impl<WT>(config: &mut BinaryOperatorConfig, cap: &BinaryOperatorConfigCap) {
+        assert!(has_access(config, cap), ENotAdmin);
+        let type_name = type_name::get<WT>();
+        if (vec_set::contains(&config.impl_allowlist, &type_name)) {
+            vec_set::remove(&mut config.impl_allowlist, &type_name);
+        };
+    }
+
+    /// Check whether the `BinaryOperatorConfigCap` matches the `BinaryOperatorConfig`.
+    public fun has_access(config: &mut BinaryOperatorConfig, cap: &BinaryOperatorConfigCap): bool {
+        object::id(config) == cap.for
     }
 
     //public fun apply(first: u64, second: u64) : u64 {
@@ -68,10 +115,12 @@ module sui_intf_demo_core::binary_operator {
     }
 
     public fun new_apply_response<WT: drop, C>(
+        config: &BinaryOperatorConfig,
         _impl_witness: WT,
         result: u64,
         _apply_request: ApplyRequest<C>,
     ): ApplyResponse<WT, C> {
+        assert!(vec_set::contains(&config.impl_allowlist, &type_name::get<WT>()), ENotAllowedImpl);
         ApplyResponse {
             result,
             _apply_request,

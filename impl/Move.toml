@@ -1,7 +1,7 @@
 [package]
 name = "sui_intf_demo_impl"
 version = "0.0.1"
-published-at = "0x8eee8abd612d0e87897e82f93b7f9fb8a1a7f826aad0f4ff3646b5fe78b5dbf5"
+published-at = "0x17bdcf146e12ce862aeda56524468595f38a95e278900ac34842124ddbc7b5f7"
 
 [dependencies]
 #Sui = { git = "https://github.com/MystenLabs/sui.git", subdir = "crates/sui-framework/packages/sui-framework", rev = "main" }
@@ -10,5 +10,5 @@ sui_intf_demo_core = { local = "../core" }
 
 [addresses]
 #sui_intf_demo_impl = "0x0"
-sui_intf_demo_impl = "0x8eee8abd612d0e87897e82f93b7f9fb8a1a7f826aad0f4ff3646b5fe78b5dbf5"
+sui_intf_demo_impl = "0x17bdcf146e12ce862aeda56524468595f38a95e278900ac34842124ddbc7b5f7"
 #sui = "0000000000000000000000000000000000000000000000000000000000000002"
