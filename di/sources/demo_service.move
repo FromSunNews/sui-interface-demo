@@ -29,5 +29,22 @@ module sui_intf_demo_di::demo_service {
         demo_service_process::foo_step_2_callback(step_2_rsp, _ctx)
     }
 
-    
+    struct FooEvent has copy, drop {
+        result: u64,
+    }
+
+    public entry fun test_foo(
+        _ctx: &TxContext,
+    ) {
+        let x = 1;
+        let y = 2;
+        let rsp = foo(x, y, _ctx);
+        sui::event::emit(FooEvent { result: rsp });
+    } 
+    //
+    // sui client call --function test_foo --module demo_service --package __PCK_ID_ --gas-budget 1000000000
+    //
+    // (2 + 3) * 3 + 1 = 16
+    //
+
 }
