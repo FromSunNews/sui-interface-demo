@@ -1,0 +1,74 @@
+services:
+  BinaryOperator:
+    abstract: true
+    methods:
+      Apply:
+        parameters:
+          First:
+            type: u64
+          Second:
+            type: u64
+        result:
+          type: u64
+
+  DemoService:
+    requiredComponents:
+      Op_1:
+        type: BinaryOperator
+      Op_2:
+        type: BinaryOperator
+    methods:
+      Foo:
+        parameters:
+          X:
+            type: u64
+          Y:
+            type: u64
+        result:
+          type: u64
+        steps:
+          Step_0:
+            invokeLocal: "FooStep_0"
+            arguments:
+              X: X
+              Y: Y
+            exportVariables:
+              X_1:
+                # {}
+              Y_1:
+                from: "_"
+          Step_1:
+            invokeParticipant: "Op_1.Apply"
+            arguments:
+              First: X_1
+              Second: Y_1
+            exportVariable: R_1
+          Step_2:
+            invokeParticipant: "Op_2.Apply"
+            arguments:
+              First: Y_1
+              Second: R_1
+            exportVariable: R_2
+          Step_3:
+            invokeLocal: "FooStep_3"
+            arguments:
+              V: R_2
+      FooStep_0:
+        isInternal: true
+        parameters:
+          X:
+            type: u64
+          Y:
+            type: u64
+        result:
+          tupleItems:
+            - type: u64
+            - type: u64
+      FooStep_3:
+        isInternal: true
+        parameters:
+          V:
+            type: u64
+        result:
+          type: u64
+
