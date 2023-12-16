@@ -104,7 +104,7 @@ module sui_intf_demo_core::binary_operator {
     // }
 
     public(friend) fun unpack_apply_request<C>(//<ImplW>(
-        _apply_request: ApplyRequest<C>, //<ImplW>,
+        _apply_request: ApplyRequest<C>,
     ): (u64, u64, C) {
         let ApplyRequest {
             first,

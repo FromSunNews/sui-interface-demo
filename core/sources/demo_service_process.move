@@ -20,6 +20,14 @@ module sui_intf_demo_core::demo_service_process {
         let r_2 = binary_operator_2::apply(y_1, r_1); //<- step_2
         foo_step_3(r_2) //<- step_3
     }
+
+    fun foo_step_0(x: u64, y: u64): (u64, u64) {
+        //...
+    }
+
+    fun foo_step_3(v: u64): u64 {
+        //...
+    }
     */
     // --------------- Pseudo-code End --------------- 
 
@@ -86,7 +94,8 @@ module sui_intf_demo_core::demo_service_process {
             y_1,
             r_1,
         };
-        let step_2_request = binary_operator::new_apply_request<FooStep_2Context>(//_impl_witness_2, 
+        let step_2_request = binary_operator::new_apply_request<FooStep_2Context>(
+            //_impl_witness_2, 
             y_1, 
             r_1,
             step_2_context,
