@@ -9,7 +9,7 @@ module sui_intf_demo_core::binary_operator {
     const ENotAdmin: u64 = 100;
     const ENotAllowedImpl: u64 = 101;
 
-    struct BINARY_OPERATOR has drop {}
+    //struct BINARY_OPERATOR has drop {}
 
     struct BinaryOperatorConfig has key, store {
         id: UID,
@@ -21,7 +21,9 @@ module sui_intf_demo_core::binary_operator {
         for: ID
     }
 
-    fun init(_witness: BINARY_OPERATOR, ctx: &mut TxContext) {
+    fun init(//_witness: BINARY_OPERATOR, 
+        ctx: &mut TxContext
+    ) {
         let config = BinaryOperatorConfig {
             id: object::new(ctx),
             impl_allowlist: vec_set::empty(),
