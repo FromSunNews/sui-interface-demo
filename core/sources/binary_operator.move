@@ -1,15 +1,13 @@
 module sui_intf_demo_core::binary_operator {
     use std::type_name::{Self, TypeName};
+    use sui::object::{Self, ID, UID};
     use sui::tx_context::{Self, TxContext};
     use sui::vec_set::{Self, VecSet};
-    use sui::object::{Self, ID, UID};
-    
+
     friend sui_intf_demo_core::demo_service_process;
 
     const ENotAdmin: u64 = 100;
     const ENotAllowedImpl: u64 = 101;
-
-    //struct BINARY_OPERATOR has drop {}
 
     struct BinaryOperatorConfig has key, store {
         id: UID,
@@ -21,9 +19,7 @@ module sui_intf_demo_core::binary_operator {
         for: ID
     }
 
-    fun init(//_witness: BINARY_OPERATOR, 
-        ctx: &mut TxContext
-    ) {
+    fun init(ctx: &mut TxContext) {
         let config = BinaryOperatorConfig {
             id: object::new(ctx),
             impl_allowlist: vec_set::empty(),
@@ -52,15 +48,12 @@ module sui_intf_demo_core::binary_operator {
         };
     }
 
-    /// Check whether the `BinaryOperatorConfigCap` matches the `BinaryOperatorConfig`.
+    /// Check whether the ConfigCap matches the Config.
     public fun has_access(config: &mut BinaryOperatorConfig, cap: &BinaryOperatorConfigCap): bool {
         object::id(config) == cap.for
     }
 
-    //public fun apply(first: u64, second: u64) : u64 {
-    //}
-
-    struct ApplyRequest<C> {//<phantom T> {
+    struct ApplyRequest<C> {
         first: u64,
         second: u64,
         _apply_context: C,
@@ -71,12 +64,11 @@ module sui_intf_demo_core::binary_operator {
         _apply_request: ApplyRequest<C>,
     }
 
-    public(friend) fun new_apply_request<C>(//<ImplW: drop>(
-        //_impl_witness: ImplW,
-        first: u64, 
+    public(friend) fun new_apply_request<C>(
+        first: u64,
         second: u64,
         _apply_context: C,
-    ): ApplyRequest<C> {//<ImplW> {
+    ): ApplyRequest<C> {
         ApplyRequest {
             first,
             second,
@@ -84,28 +76,11 @@ module sui_intf_demo_core::binary_operator {
         }
     }
 
-    // public fun apply_request_first(request: &ApplyRequest): u64 {
-    //     request.first
-    // }
-
-    // public fun apply_request_second(request: &ApplyRequest): u64 {
-    //     request.second
-    // }
-
     public fun get_apply_request_all_parameters<C>(request: &ApplyRequest<C>): (u64, u64) {
         (request.first, request.second)
     }
 
-    // public(friend) fun drop_apply_request(//<ImplW>(
-    //     _apply_request: ApplyRequest, //<ImplW>,
-    // ) {
-    //     let ApplyRequest {
-    //         first: _,
-    //         second: _,
-    //     } = _apply_request;
-    // }
-
-    public(friend) fun unpack_apply_request<C>(//<ImplW>(
+    public(friend) fun unpack_apply_request<C>(
         _apply_request: ApplyRequest<C>,
     ): (u64, u64, C) {
         let ApplyRequest {
@@ -140,3 +115,25 @@ module sui_intf_demo_core::binary_operator {
     }
 
 }
+//
+// The boilerplate code that implements the interface:
+//
+/*
+module xxx_package_id::xxx_binary_operator_impl {
+    use sui_intf_demo_core::binary_operator::{Self, BinaryOperatorConfig};
+
+    struct XxxBinaryOperatorImpl has drop {}
+
+    public fun apply<C>(config: &BinaryOperatorConfig, apply_request: binary_operator::ApplyRequest<C>): binary_operator::ApplyResponse<XxxBinaryOperatorImpl, C> {
+        let (first, second) = binary_operator::get_apply_request_all_parameters(&apply_request);
+        //todo let result: u64 = ...
+        binary_operator::new_apply_response(
+            config,
+            XxxBinaryOperatorImpl{},
+            result,
+            apply_request
+        )
+    }
+
+}
+*/
