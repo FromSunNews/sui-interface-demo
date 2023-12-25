@@ -126,3 +126,29 @@ module sui_intf_demo_core::demo_service_process {
     }
 
 }
+//
+// The boilerplate code that does "Dependency Injection".
+//
+/*
+module xxx_di_package_id::demo_service {
+    use sui::tx_context::TxContext;
+    use sui_intf_demo_core::demo_service_process;
+    use sui_intf_demo_core::binary_operator::BinaryOperatorConfig;
+    use op_1_impl_package_id::op_1_binary_operator_impl as op_1;
+    use op_2_impl_package_id::op_2_binary_operator_impl as op_2;
+
+    public fun foo(
+        _binary_operator_config: &BinaryOperatorConfig,
+        x: u64,
+        y: u64,
+        _ctx: &TxContext,
+    ): u64 {
+        let step_1_req = demo_service_process::foo(x, y, _ctx);
+        let step_1_rsp = op_1::apply(_binary_operator_config, step_1_req);
+        let step_2_req = demo_service_process::foo_step_1_callback(step_1_rsp, _ctx);
+        let step_2_rsp = op_2::apply(_binary_operator_config, step_2_req);
+        demo_service_process::foo_step_2_callback(step_2_rsp, _ctx)
+    }
+
+}
+*/
