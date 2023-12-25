@@ -7,7 +7,7 @@ module sui_intf_demo_di::demo_service {
 
 
     public fun foo(//<Op_1, Op_2>(
-        _config: &BinaryOperatorConfig,
+        _binary_operator_config: &BinaryOperatorConfig,
         x: u64,
         y: u64,
         _ctx: &TxContext,
@@ -25,9 +25,9 @@ module sui_intf_demo_di::demo_service {
         // demo_service_process::foo_step_2_callback(rsp_2, c_2)
 
         let step_1_req = demo_service_process::foo(x, y, _ctx);
-        let step_1_rsp = op_1::apply(_config, step_1_req);
+        let step_1_rsp = op_1::apply(_binary_operator_config, step_1_req);
         let step_2_req = demo_service_process::foo_step_1_callback(step_1_rsp, _ctx);
-        let step_2_rsp = op_2::apply(_config, step_2_req);
+        let step_2_rsp = op_2::apply(_binary_operator_config, step_2_req);
         demo_service_process::foo_step_2_callback(step_2_rsp, _ctx)
     }
 
