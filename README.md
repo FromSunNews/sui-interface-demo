@@ -168,6 +168,19 @@ wubuku/dddappp:0.0.1 \
 在 `di` 目录，我们创建了一个 Move 项目，演示了如何实现依赖注入。
 
 
+## 测试
+
+我们需要意识到：当一个“服务”需要依赖注入的“外部组件”来完成某个功能，这个外部组件必须是“安全的”。dddappp 生成的代码提供了基础的“管理”机制。
+
+下面的命令展示的是，将两个接口的实现添加到可以被“核心业务逻辑”调用的 allowlist 中：
+
+```shell
+sui client call --function add_allowed_impl --module binary_operator --package 0x89ffe07a3defcb50d0546a07c698907942e235a8d8ab6a2e3b639cfb1963e260 --type-args '0x17bdcf146e12ce862aeda56524468595f38a95e278900ac34842124ddbc7b5f7::addition_operator::AdditionOperator' --args 0x6b341e0ee34d5a833cca5e7d094dce21424bc6aa39c8d914af2cb93846e5a30e 0x289747bafc8b879f84933ca808972120d61d25226ffd38e4eb1cc6e6a5761a8b --gas-budget 1000000000
+
+sui client call --function add_allowed_impl --module binary_operator --package 0x89ffe07a3defcb50d0546a07c698907942e235a8d8ab6a2e3b639cfb1963e260 --type-args '0x17bdcf146e12ce862aeda56524468595f38a95e278900ac34842124ddbc7b5f7::multiplication_operator::MultiplicationOperator' --args 0x6b341e0ee34d5a833cca5e7d094dce21424bc6aa39c8d914af2cb93846e5a30e 0x289747bafc8b879f84933ca808972120d61d25226ffd38e4eb1cc6e6a5761a8b --gas-budget 1000000000 
+```
+
+
 ## Some Tips
 
 ### Clean Up Exited Docker Containers
