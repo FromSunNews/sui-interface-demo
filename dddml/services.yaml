@@ -82,3 +82,17 @@ services:
           Move:
             "v + 1"
 
+  IntSupplier:
+    abstract: true
+    methods:
+      Get:
+        parameters:
+        result:
+          type: u64
+  IntConsumer:
+    abstract: true
+    methods:
+      Accept:
+        parameters:
+          Value:
+            type: u64
