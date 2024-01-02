@@ -48,6 +48,10 @@ module sui_intf_demo_core::binary_operator {
         };
     }
 
+    fun assert_allowlisted<WT: drop>(config: &BinaryOperatorConfig, _impl_witness: WT) {
+        assert!(vec_set::contains(&config.impl_allowlist, &type_name::get<WT>()), ENotAllowedImpl);
+    }
+
     /// Check whether the ConfigCap matches the Config.
     public fun has_access(config: &mut BinaryOperatorConfig, cap: &BinaryOperatorConfigCap): bool {
         object::id(config) == cap.for
@@ -97,7 +101,7 @@ module sui_intf_demo_core::binary_operator {
         result: u64,
         _apply_request: ApplyRequest<C>,
     ): ApplyResponse<WT, C> {
-        assert!(vec_set::contains(&config.impl_allowlist, &type_name::get<WT>()), ENotAllowedImpl);
+        assert_allowlisted(config, _impl_witness);
         ApplyResponse {
             result,
             _apply_request,
