@@ -1,31 +1,39 @@
-# 使用 dddappp 实现 Move 合约的依赖注入
+# Dependency Injection for Move Contracts with dddappp
 
-写过 Java 应用的开发者，应该很熟悉 Spring 框架。Spring 框架的核心功能之一就是依赖注入。依赖注入的好处之一是，可以将应用程序的各个组件解耦，从而使得应用程序更容易维护和扩展。
+English | [中文版](./README_CN.md)
 
-依赖注入其实是“控制反转”编程思想的实践。而控制反转，是开发大规模应用必备的思维武器。（关于这个问题，这里不打算展开讨论。😄）
+Developers who have developed Java applications should be familiar with the Spring Framework, 
+one of whose core features is "dependency injection" (DI). 
+One of the benefits of dependency injection is that it decouples the components of an application, 
+making it easier to maintain and extend.
+
+Dependency injection is actually a practice of the "inversion of control (IoC)" programming idea. 
+IoC is a necessary weapon in the mindset of developing large-scale applications. (On this issue, do not intend to expand the discussion here 😄.)
 
 
-## 如果 Move 有“接口”……
+## If Move has "interface" ...
 
-一定有很多人期望 Move 语言有朝一日具备类似其他语言的 interface 特性，然后基于 interface 实现依赖注入。可能他们期望的是，可以类似下面这样编写 Move 合约（伪代码）：
+There must be a lot of developers out there who expect the Move language to someday have interface-like features 
+(maybe it's not called `interface`, it's called `trait` or something else) and then implement dependency injection based on it.
+What they probably expect is to be able to write Move contracts like the following (pseudo-code):
 
 ```move
 module sui_intf_demo::demo_service {
-    /// 定义一个接口
+    /// Define an interface
     public interface binary_operator {
         fun apply(first: u64, second: u64) : u64;
     }
 
-    #[inject] // <- 表示这里需要注入一个实现 binary_operator 接口的组件
+    #[inject] // <- means that need to inject a component that implements the binary_operator interface.
     private op_1: binary_operator;
 
-    #[inject] // <- 表示这里需要注入另一个实现 binary_operator 接口的组件
+    #[inject] // <- means that need to inject another component that implements the binary_operator interface.
     private op_2: binary_operator;
 
     public fun foo(x: u64, y: u64): u64 {
         let (x_1, y_1) = foo_step_0(x, y); //<- step_0
-        let r_1 = op_1::apply(x_1, y_1); //<- step_1，调用组件 op_1 的函数
-        let r_2 = op_2::apply(y_1, r_1); //<- step_2，调用组件 op_2 的函数
+        let r_1 = op_1::apply(x_1, y_1); //<- step_1, call the function of component op_1
+        let r_2 = op_2::apply(y_1, r_1); //<- step_2, Call the function of component op_2
         foo_step_3(r_2) //<- step_3
     }
 
@@ -39,18 +47,24 @@ module sui_intf_demo::demo_service {
 }
 ```
 
-然后，我们希望可以在“某个地方”，通过一些“配置代码”，为上面的 `demo_service` 注入两个实现了 `binary_operator` 接口的组件。
+Then, they want to be able to inject two components that implement the `binary_operator` 
+interface into the above `demo_service` somewhere with some "configuration code".
 
-显然，目前 Move 合约并**不能**像上面这样写。最大的障碍是 Move 目前没有 interface 特性。不过，我们确实可以通过一些技巧，在现有的 Move 特性的基础上实现类似的功能。
+Obviously, at this point in time, Move contracts **can't** be written like this. 
+The biggest obstacle is that Move does not currently have the `interface` feature. 
+However, it is possible to implement something similar based on the existing Move features with a few tricks.
 
-如果你想要手动编码来实现这个过程，可能还是挺“麻烦”的；这时候你应该需要 dddappp 这个效率提升的大杀器。😄
+If you have prior knowledge of Move's ["hot potato"](http://examples.sui.io/patterns/hot-potato.html) pattern, 
+it should help you to understand the relevant code of the solution described below.
 
+## Using dddappp to implement "Dependency Injection"
 
-## 使用 dddappp 实现 Move 合约的“依赖注入”
+Now, let's use dddappp, the efficiency killer, and just show you the code.
+Otherwise, if you want to manually code the following solution, it might be a bit of a pain in the ass. 😂
 
-### 编写 DDDML 模型文件
+### Writing DDDML model file
 
-我们以上面的伪代码为示例，将它“直译”为 DDDML 的模型文件：
+Let's take the pseudo-code above as an example and "translate" it into a DDDML model file:
 
 ```yaml
 services:
@@ -131,12 +145,14 @@ services:
             "v + 1"
 ```
 
-我们需要注意一下，按照 DDDML 的规范，各种“标识符”，包括“服务”、方法、参数的名字，应该使用 `PascalCase` 命名风格，这让它们可以很好地与 DDDML 的“关键字”在视觉上区分开来。
+It should be noted that, according to the DDDML convention, the various "identifiers", 
+including the names of `services`, `methods`, and `parameters`, should be named using the `PascalCase` naming style.
+This allows them to be visually distinguished from DDDML `camelCase` keywords (e.g. `methods`, `parameters`, etc.).
 
 
-### “编写” Move 合约的核心模型代码
+### "Writing" the core model code of Move contract
 
-事实上你不需要再编写什么代码，只需要这样执行一下 dddappp CLI（假设上面的模型文件保存在 `./dddml/services.yaml`）：
+For this step, you don't actually need to write any more code, just run the dddappp CLI like this (assuming the model file above is saved in `. /dddml/services.yaml`):
 
 ```shell
 docker run \
@@ -152,23 +168,25 @@ wubuku/dddappp:0.0.1 \
 --pomGroupId test.suiinterfacedemo
 ```
 
-然后在 `core` 目录会生成一个 Move 项目。你可以看到其中包含了两个文件：
+Then a Move project is generated in the `core` directory. You can see that it contains two files:
 
-* `binary_operator.move`。这里主要包含了我们要实现的服务所依赖的“接口”的定义。在它的注释中，我们可以发现它还贴心地提供了如何实现这个接口的样板代码。
-* `demo_service_process.move`。这是一个依赖于“接口”的服务。在它的注释中，我们可以发现它还贴心地提供了如何为这个服务注入它所依赖的“接口的实现”的样板代码。
+* `binary_operator.move`: this contains the definition of the `binary_operator` interface on which the service depends.
+* `demo_service_process.move`: this is the service that depends on the `binary_operator` interface".
+    In its comments, we can find that it also thoughtfully provides boilerplate code 
+    that shows how to inject the service with the implementations of the interface on which it depends.
 
-哈，你看到接口的定义也放到了这个名为 `core`（表示核心模型）的项目中了，对吧？ 
-没错，按照控制反转的思想，一个应用执行所依赖的外部接口，是领域的“核心模型”的一部分。
+Aha, you see that the definition of the interface is also placed in the item called `core`, which stands for core model, right?
+That's right, following the idea of IoC, the "stuff" on which the execution of an application depends are part of the "core model" of the domain.
 
-### 实现接口
+### Implementing the interface
 
-让我们在 `impl` 目录，创建了一个 Move 项目。然后在里面编写 `binary_operator` 接口的两个实现……
+Let's create a Move project in the `impl` directory. Then write two implementations of the `binary_operator` interface in it ...
 
-### 注入依赖
+### Injecting dependencies
 
-在 `di` 目录，我们创建了一个 Move 项目，演示了如何实现“依赖注入”。
+In the `di` directory, we have created a Move project that demonstrates how to implement dependency injection.
 
-为了便于说明问题，在这个项目中，我们基于“核心模型”以及“接口实现”两个项目的合约，“包装”出一个“服务”，即：
+For illustrative purposes, in this project we "wrap a service" based on the "core model" project and the "interface implementation" project:
 
 ```move
     public fun foo(
@@ -181,15 +199,17 @@ wubuku/dddappp:0.0.1 \
     }
 ```
 
-实际上，对于 Sui Move 来说，我觉得这个做法不是必须的。
-我们可以也许可以考虑使用 Sui 的 [Programmable Transaction Blocks](https://docs.sui.io/concepts/transactions/prog-txn-blocks) 特性来在“前端”实现“注入”。
+Actually, I think this is not necessary for Sui Move.
+We could perhaps consider using Sui's [Programmable Transaction Blocks](https://docs.sui.io/concepts/transactions/prog-txn-blocks) feature 
+to implement "injections" on the "front end".
 
-## 测试
 
-我们需要意识到：当一个“服务”需要依赖注入的“外部组件”来完成某个功能，这个外部组件必须是“安全的”。
-dddappp 生成的代码提供了基础的“管理”机制。
+## Testing
 
-下面的命令展示的是，将两个接口的实现添加到可以被“核心业务逻辑”调用的 allowlist（即所谓的“白名单”） 中：
+We need to realize that when a service depends on an injected "external component" to accomplish a function, the external component must be "safe".
+The code generated by dddappp provides the basic "security management" mechanism.
+
+The following commands add two implementations of the interface to the allowlist that can be called by the "core business logic":
 
 ```shell
 sui client call --function add_allowed_impl --module binary_operator --package 0x89ffe07a3defcb50d0546a07c698907942e235a8d8ab6a2e3b639cfb1963e260 --type-args '0x17bdcf146e12ce862aeda56524468595f38a95e278900ac34842124ddbc7b5f7::addition_operator::AdditionOperator' --args 0x6b341e0ee34d5a833cca5e7d094dce21424bc6aa39c8d914af2cb93846e5a30e 0x289747bafc8b879f84933ca808972120d61d25226ffd38e4eb1cc6e6a5761a8b --gas-budget 1000000000
@@ -197,7 +217,7 @@ sui client call --function add_allowed_impl --module binary_operator --package 0
 sui client call --function add_allowed_impl --module binary_operator --package 0x89ffe07a3defcb50d0546a07c698907942e235a8d8ab6a2e3b639cfb1963e260 --type-args '0x17bdcf146e12ce862aeda56524468595f38a95e278900ac34842124ddbc7b5f7::multiplication_operator::MultiplicationOperator' --args 0x6b341e0ee34d5a833cca5e7d094dce21424bc6aa39c8d914af2cb93846e5a30e 0x289747bafc8b879f84933ca808972120d61d25226ffd38e4eb1cc6e6a5761a8b --gas-budget 1000000000 
 ```
 
-然后，你可以类似下面这样调用 `di` 项目合约中的一个测试函数进行测试，查看 CLI 的输出：
+You can then test it by calling one of the test functions in the `di` project contract like this to see the output of the CLI:
 
 ```shell
 sui client call --function test_foo --module demo_service --package {DI_PACKAGE_ID} \
