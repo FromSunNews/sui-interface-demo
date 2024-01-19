@@ -1,7 +1,9 @@
 module sui_intf_demo_core::abstract_factory_config {
     use std::type_name::{Self, TypeName};
     use sui::object::{Self, ID, UID};
-    use sui::tx_context::{Self, TxContext};
+    use sui::package::{Self, Publisher};
+    use sui::transfer;
+    use sui::tx_context::{Self, sender, TxContext};
     use sui::vec_set::{Self, VecSet};
 
     friend sui_intf_demo_core::int_supplier;
@@ -9,6 +11,9 @@ module sui_intf_demo_core::abstract_factory_config {
 
     const ENotAdmin: u64 = 100;
     const ENotAllowedImpl: u64 = 101;
+    const EInvalidPublisher: u64 = 102;
+
+    struct ABSTRACT_FACTORY_CONFIG has drop {}
 
     struct AbstractFactoryConfig has key, store {
         id: UID,
@@ -20,7 +25,15 @@ module sui_intf_demo_core::abstract_factory_config {
         for: ID
     }
 
-    fun init(ctx: &mut TxContext) {
+    fun init(otw: ABSTRACT_FACTORY_CONFIG, ctx: &mut TxContext) {
+        let publisher = package::claim(otw, ctx);
+        create_config(&publisher, ctx);
+        transfer::public_transfer(publisher, sender(ctx));
+    }
+
+    #[lint_allow(self_transfer)]
+    entry fun create_config(publisher: &Publisher, ctx: &mut TxContext) {
+        assert!(package::from_package<ABSTRACT_FACTORY_CONFIG>(publisher), EInvalidPublisher);
         let config = AbstractFactoryConfig {
             id: object::new(ctx),
             impl_allowlist: vec_set::empty(),
