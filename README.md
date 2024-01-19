@@ -15,7 +15,7 @@ IoC is a necessary weapon in the mindset of developing large-scale applications.
 
 There must be a lot of developers out there who expect the Move language to someday have interface-like features 
 (maybe it's not called `interface`, it's called `trait` or something else) and then implement dependency injection based on it.
-What they probably expect is to be able to write Move contracts like the following (pseudo-code):
+What they probably expect is to be able to write Move contracts like the following (pseudocode):
 
 ```move
 module sui_intf_demo::demo_service {
@@ -59,12 +59,12 @@ it should help you to understand the relevant code of the solution described bel
 
 ## Using dddappp to implement "Dependency Injection"
 
-Now, let's use dddappp, the efficiency killer, and just show you the code.
+Now, let's use dddappp, the efficiency-boosting killer, and then just show you the code.
 Otherwise, if you want to manually code the following solution, it might be a bit of a pain in the ass. 😂
 
 ### Writing DDDML model file
 
-Let's take the pseudo-code above as an example and "translate" it into a DDDML model file:
+Let's take the pseudocode above as an example and "translate" it into a DDDML model file:
 
 ```yaml
 services:
@@ -150,7 +150,7 @@ including the names of `services`, `methods`, and `parameters`, should be named 
 This allows them to be visually distinguished from DDDML `camelCase` keywords (e.g. `methods`, `parameters`, etc.).
 
 
-### "Writing" the core model code of Move contract
+### "Writing" the core model code
 
 For this step, you don't actually need to write any more code, just run the dddappp CLI like this (assuming the model file above is saved in `. /dddml/services.yaml`):
 
@@ -171,11 +171,12 @@ wubuku/dddappp:0.0.1 \
 Then a Move project is generated in the `core` directory. You can see that it contains two files:
 
 * `binary_operator.move`: this contains the definition of the `binary_operator` interface on which the service depends.
-* `demo_service_process.move`: this is the service that depends on the `binary_operator` interface".
-    In its comments, we can find that it also thoughtfully provides boilerplate code 
+    In its comments, we can find that it thoughtfully provides boilerplate code that implements the interface.
+* `demo_service_process.move`: this is the service that depends on the `binary_operator` interface.
+    In its comments, we can find that it also provides boilerplate code 
     that shows how to inject the service with the implementations of the interface on which it depends.
 
-Aha, you see that the definition of the interface is also placed in the item called `core`, which stands for core model, right?
+Aha, you see that the definition of the interface is also placed in this project called `core` (which stands for core model), right?
 That's right, following the idea of IoC, the "stuff" on which the execution of an application depends are part of the "core model" of the domain.
 
 ### Implementing the interface
@@ -186,7 +187,7 @@ Let's create a Move project in the `impl` directory. Then write two implementati
 
 In the `di` directory, we have created a Move project that demonstrates how to implement dependency injection.
 
-For illustrative purposes, in this project we "wrap a service" based on the "core model" project and the "interface implementation" project:
+For illustrative purposes, in this project we "wrap a service" based on the `core` model project and the interface `impl` (implementation) project, like below:
 
 ```move
     public fun foo(
