@@ -84,7 +84,8 @@ services:
 
   IntSupplier:
     abstract: true
-    externalConfiguration: "AbstractFactoryConfig"
+    metadata:
+      MoveExternalConfiguration: "AbstractFactoryConfig"
     methods:
       Get:
         parameters:
@@ -92,7 +93,8 @@ services:
           type: u64
   IntConsumer:
     abstract: true
-    externalConfiguration: "AbstractFactoryConfig"
+    metadata:
+      MoveExternalConfiguration: "AbstractFactoryConfig"
     methods:
       Accept:
         parameters:
