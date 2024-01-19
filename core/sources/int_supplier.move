@@ -6,6 +6,8 @@
 module sui_intf_demo_core::int_supplier {
     use sui_intf_demo_core::abstract_factory_config::{Self, AbstractFactoryConfig};
 
+    friend sui_intf_demo_core::hello_world_service_process;
+
     struct GetRequest<C> {
         _get_context: C,
     }

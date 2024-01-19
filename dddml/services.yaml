@@ -100,3 +100,22 @@ services:
         parameters:
           Value:
             type: u64
+
+
+  HelloWorldService:
+    requiredComponents:
+      Supplier:
+        type: IntSupplier
+      Consumer:
+        type: IntConsumer
+    methods:
+      Foo:
+        parameters:
+        steps:
+          Supply:
+            invokeParticipant: "Supplier.Get"
+            exportVariable: R
+          Consume:
+            invokeParticipant: "Consumer.Accept"
+            arguments:
+              Value: R
