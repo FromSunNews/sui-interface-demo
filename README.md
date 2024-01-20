@@ -59,7 +59,7 @@ it should help you to understand the relevant code of the solution described bel
 
 ## Using dddappp to implement "Dependency Injection"
 
-Now, let's use dddappp, the efficiency-boosting killer, and then just show you the code.
+Now, let's use dddappp, the real killer for efficiency gains, and then just show you the code.
 Otherwise, if you want to manually code the following solution, it might be a bit of a pain in the ass. 😂
 
 ### Writing DDDML model file
