@@ -7,7 +7,7 @@ module sui_intf_demo_di::hello_world_service {
 
     public fun foo(
         _abstract_factory_config: &AbstractFactoryConfig,
-        _ctx: &TxContext,
+        _ctx: &mut TxContext,
     ) {
         let supply_req = hello_world_service_process::foo(_ctx);
         let supply_rsp = supplier::get(_abstract_factory_config, supply_req);

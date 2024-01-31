@@ -1,7 +1,10 @@
 module sui_intf_demo_core::hello_world_service_process {
+    use sui::object;
     use sui::tx_context::TxContext;
     use sui_intf_demo_core::int_consumer;
     use sui_intf_demo_core::int_supplier;
+
+    const EMismatchedObjectId: u64 = 10;
 
     struct FooSupplyContext {
     }
@@ -11,7 +14,7 @@ module sui_intf_demo_core::hello_world_service_process {
     }
 
     public fun foo(
-        _ctx: &TxContext,
+        _ctx: &mut TxContext,
     ): int_supplier::GetRequest<FooSupplyContext> {
         let supply_context = FooSupplyContext {
         };
@@ -23,7 +26,7 @@ module sui_intf_demo_core::hello_world_service_process {
 
     public fun foo_supply_callback<Supplier>(
         supply_response: int_supplier::GetResponse<Supplier, FooSupplyContext>,
-        _ctx: &TxContext,
+        _ctx: &mut TxContext,
     ): int_consumer::AcceptRequest<FooConsumeContext> {
         let (r, supply_request) = int_supplier::unpack_get_respone(supply_response);
         let supply_context = int_supplier::unpack_get_request(supply_request);
@@ -42,7 +45,7 @@ module sui_intf_demo_core::hello_world_service_process {
     #[allow(unused_assignment)]
     public fun foo_consume_callback<Consumer>(
         consume_response: int_consumer::AcceptResponse<Consumer, FooConsumeContext>,
-        _ctx: &TxContext,
+        _ctx: &mut TxContext,
     ) {
         let consume_request = int_consumer::unpack_accept_respone(consume_response);
         let (_, consume_context) = int_consumer::unpack_accept_request(consume_request);

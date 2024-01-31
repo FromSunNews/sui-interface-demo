@@ -1,6 +1,9 @@
 module sui_intf_demo_core::demo_service_process {
+    use sui::object;
     use sui::tx_context::TxContext;
     use sui_intf_demo_core::binary_operator;
+
+    const EMismatchedObjectId: u64 = 10;
 
     struct FooStep_1Context {
         x: u64,
@@ -20,7 +23,7 @@ module sui_intf_demo_core::demo_service_process {
     public fun foo(
         x: u64,
         y: u64,
-        _ctx: &TxContext,
+        _ctx: &mut TxContext,
     ): binary_operator::ApplyRequest<FooStep_1Context> {
         let (x_1, y_1) = foo_step_0(x, y, _ctx);
         let step_1_context = FooStep_1Context {
@@ -39,7 +42,7 @@ module sui_intf_demo_core::demo_service_process {
 
     public fun foo_step_1_callback<Op_1>(
         step_1_response: binary_operator::ApplyResponse<Op_1, FooStep_1Context>,
-        _ctx: &TxContext,
+        _ctx: &mut TxContext,
     ): binary_operator::ApplyRequest<FooStep_2Context> {
         let (r_1, step_1_request) = binary_operator::unpack_apply_respone(step_1_response);
         let (_, _, step_1_context) = binary_operator::unpack_apply_request(step_1_request);
@@ -67,7 +70,7 @@ module sui_intf_demo_core::demo_service_process {
     #[allow(unused_assignment)]
     public fun foo_step_2_callback<Op_2>(
         step_2_response: binary_operator::ApplyResponse<Op_2, FooStep_2Context>,
-        _ctx: &TxContext,
+        _ctx: &mut TxContext,
     ): u64 {
         let (r_2, step_2_request) = binary_operator::unpack_apply_respone(step_2_response);
         let (_, _, step_2_context) = binary_operator::unpack_apply_request(step_2_request);

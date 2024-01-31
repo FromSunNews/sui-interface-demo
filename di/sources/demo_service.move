@@ -9,7 +9,7 @@ module sui_intf_demo_di::demo_service {
         _binary_operator_config: &BinaryOperatorConfig,
         x: u64,
         y: u64,
-        _ctx: &TxContext,
+        _ctx: &mut TxContext,
     ): u64 {
         let step_1_req = demo_service_process::foo(x, y, _ctx);
         let step_1_rsp = op_1::apply(_binary_operator_config, step_1_req);
@@ -25,7 +25,7 @@ module sui_intf_demo_di::demo_service {
 
     public entry fun test_foo(
         _config: &BinaryOperatorConfig,
-        _ctx: &TxContext,
+        _ctx: &mut TxContext,
     ) {
         let x = 1;
         let y = 2;
