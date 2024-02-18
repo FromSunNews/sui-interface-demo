@@ -8,7 +8,15 @@ One of the benefits of dependency injection is that it decouples the components 
 making it easier to maintain and extend.
 
 Dependency injection is actually a practice of the "inversion of control (IoC)" programming idea. 
-IoC is a necessary weapon in the mindset of developing large-scale applications. (On this issue, do not intend to expand the discussion here 😄.)
+IoC is a necessary weapon in the mindset of developing large-scale applications.
+
+Some may argue that current smart contracts are not complex, or even, that Dapp development efficiency doesn't matter...
+
+> Enough! Stop lying to yourself.
+> 
+> You want to, but developing complex fully on-chain applications is too hard.
+
+(On this issue, do not intend to expand the discussion here 😄.)
 
 
 ## If Move has "interface" ...
@@ -182,6 +190,10 @@ That's right, following the idea of IoC, the "stuff" on which the execution of a
 ### Implementing the interface
 
 Let's create a Move project in the `impl` directory. Then write two implementations of the `binary_operator` interface in it ...
+
+Typically, we create adapter contracts to implement the interfaces required by the core model on top of the functionality provided by other contracts.
+That's good. In software engineering, such adapter code is called a "corruption layer".
+They effectively prevent concepts from other domains from entering and corrupting the core domain.
 
 ### Injecting dependencies
 
