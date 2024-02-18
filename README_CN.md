@@ -136,7 +136,7 @@ services:
 ```
 
 我们需要注意一下，按照 DDDML 的规范，各种“标识符”，包括“服务”、方法、参数的名字，应该使用 `PascalCase` 命名风格。
-这让它们可以很好地与哪些 DDDML 的 `camelCase` “关键字”（比如 `methods`、`parameters` 等）在视觉上区分开来。
+这让它们可以很好地与哪些 DDDML 的 `camelCase` “关键字”（比如 `methods`、`parameters` 等这些词的本身）在视觉上区分开来。
 
 
 ### “编写” Move 合约的核心模型代码

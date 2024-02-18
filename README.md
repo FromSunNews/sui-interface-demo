@@ -166,8 +166,9 @@ services:
 ```
 
 It should be noted that, according to the DDDML convention, the various "identifiers", 
-including the names of `services`, `methods`, and `parameters`, should be named using the `PascalCase` naming style.
-This allows them to be visually distinguished from DDDML `camelCase` keywords (e.g. `methods`, `parameters`, etc.).
+including the names of services, methods, and parameters, should be named using the `PascalCase` naming style.
+This allows them to be visually distinguished from DDDML `camelCase` keywords 
+(e.g. the words `methods`, `parameters`, etc. themselves).
 
 
 ### "Writing" the core model code
