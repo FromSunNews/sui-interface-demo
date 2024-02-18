@@ -205,8 +205,8 @@ That's right, following the idea of IoC, the "stuff" on which the execution of a
 Let's create a Move project in the `impl` directory. Then write two implementations of the `binary_operator` interface in it ...
 
 Typically, we create adapter contracts to implement the interfaces required by the core model on top of the functionality provided by other contracts.
-That's good. In software engineering, such adapter code is called a "corruption layer".
-They effectively prevent concepts from other domains from entering and corrupting the core domain.
+That's good. In software engineering, such adapter code is called a "anti-corruption layer", 
+which effectively prevent concepts from other domains from entering and corrupting the core domain.
 
 ### Injecting dependencies
 
