@@ -67,6 +67,18 @@ it should help you to understand the relevant code of the solution described bel
 
 ## Using dddappp to implement "Dependency Injection"
 
+This repository contains a demo of how to implement DI in Move contracts.
+
+### Project structure
+
+There are three Move projects in the repository:
+
+* `core`: The core model project of the domain. Includes the core business logic of the domain and the "interfaces" core business logic depends on.
+* `impl`: The implementations of the "interfaces" required by the core model. 
+* `di`: The project that demonstrates how to implement dependency injection.
+
+---
+
 Now, let's use dddappp, the real killer for efficiency gains, and then just show you the code.
 Otherwise, if you want to manually code the following solution, it might be a bit of a pain in the ass. 😂
 
