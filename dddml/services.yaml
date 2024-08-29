@@ -36,7 +36,7 @@ services:
               X_1:
                 # {}
               Y_1:
-                from: "_"
+                extractionPath: "_"
           Step_1:
             invokeParticipant: "Op_1.Apply"
             arguments:

@@ -16,7 +16,7 @@ module sui_intf_demo_core::abstract_factory_config {
 
     const ENotAdmin: u64 = 100;
     const ENotAllowedImpl: u64 = 101;
-    const EInvalidPublisher: u64 = 102;
+    const ENotPublisher: u64 = 102;
 
     struct ABSTRACT_FACTORY_CONFIG has drop {}
 
@@ -38,7 +38,7 @@ module sui_intf_demo_core::abstract_factory_config {
 
     #[lint_allow(self_transfer)]
     entry fun create_config(publisher: &Publisher, ctx: &mut TxContext) {
-        assert!(package::from_package<ABSTRACT_FACTORY_CONFIG>(publisher), EInvalidPublisher);
+        assert!(package::from_package<ABSTRACT_FACTORY_CONFIG>(publisher), ENotPublisher);
         let config = AbstractFactoryConfig {
             id: object::new(ctx),
             impl_allowlist: vec_set::empty(),
