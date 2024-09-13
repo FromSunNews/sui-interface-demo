@@ -1,6 +1,9 @@
-# Dependency Injection for Move Contracts with dddappp
+### My socials:
+- [Twitter](https://x.com/FromSunNews)
+- [Telegram](https://t.me/+84378630804)
+- [Linkedin](https://www.linkedin.com/in/tunhatphuong2002)
 
-English | [中文版](./README_CN.md)
+# Dependency Injection for Move Contracts with dddappp
 
 Developers who have developed Java applications should be familiar with the Spring Framework, 
 one of whose core features is "dependency injection" (DI). 
